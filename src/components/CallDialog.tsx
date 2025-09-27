@@ -1,0 +1,163 @@
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Phone, Video, VideoOff, Mic, MicOff } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Contact } from "./ChatApp";
+import { cn } from "@/lib/utils";
+import boyAvatar from "@/assets/boy.png";
+import girlAvatar from "@/assets/girl.png";
+
+interface CallDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  contact: Contact;
+  isVideo?: boolean;
+}
+
+export const CallDialog = ({ isOpen, onClose, contact, isVideo = false }: CallDialogProps) => {
+  const [isMuted, setIsMuted] = useState(false);
+  // Camera enabled by default only for video calls, disabled for audio calls
+  const [isVideoEnabled, setIsVideoEnabled] = useState(false);
+  const [callStatus, setCallStatus] = useState<'ringing' | 'connected' | 'ending'>('ringing');
+
+  // Enable camera when it's a video call, but only when the dialog opens
+  useEffect(() => {
+    if (isOpen && isVideo) {
+      setIsVideoEnabled(true);
+    }
+  }, [isOpen, isVideo]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setCallStatus('ringing');
+      // Simulate call connection after 3 seconds
+      const connectTimer = setTimeout(() => {
+        setCallStatus('connected');
+      }, 3000);
+
+      return () => clearTimeout(connectTimer);
+    }
+  }, [isOpen]);
+
+  const handleEndCall = () => {
+    setCallStatus('ending');
+    // Add a small delay before closing for animation
+    setTimeout(() => {
+      onClose();
+      // Reset status for next call
+      setCallStatus('ringing');
+    }, 500);
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose} modal>
+      <DialogContent className={cn(
+        "fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]",
+        "p-0 w-screen h-[100dvh] max-w-none max-h-none border-none overflow-hidden",
+        "bg-gradient-to-b from-background/95 to-background/85 backdrop-blur-xl",
+        "transform transition-[transform,opacity] duration-500",
+        callStatus === 'ending' ? "scale-95 opacity-0" : "scale-100 opacity-100"
+      )}>
+        <div className="flex flex-col items-center justify-between h-full w-full max-h-[100dvh] px-4 py-8 md:py-12 safe-area-top safe-area-bottom">
+          {/* Contact Info */}
+          <div className={cn(
+            "text-center space-y-6 transition-all duration-700 mt-8 md:mt-12",
+            callStatus === 'ringing' && "animate-soft-bounce"
+          )}>
+            <Avatar className={cn(
+              "h-28 w-28 md:h-36 md:w-36 mx-auto transition-all duration-500",
+              "ring-4 md:ring-8 ring-primary/10",
+              callStatus === 'ringing' && "animate-avatar-glow"
+            )}>
+              <AvatarImage 
+                src={contact.avatar || (contact.gender === 'male' ? boyAvatar : girlAvatar)} 
+                alt={contact.name} 
+              />
+              <AvatarFallback className="bg-primary/10 text-primary text-4xl md:text-5xl">
+                {contact.name.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="space-y-2 md:space-y-3">
+              <h2 className="text-2xl md:text-3xl font-semibold text-foreground line-clamp-1">
+                {contact.name}
+              </h2>
+              <p className="text-base md:text-lg text-muted-foreground flex items-center justify-center gap-2 md:gap-3">
+                <span className="line-clamp-1">{isVideo ? 'Video Call' : 'Voice Call'}</span>
+                <span className="inline-flex h-1 w-1 md:h-1.5 md:w-1.5 rounded-full bg-muted-foreground shrink-0"/>
+                <span className="line-clamp-1">{contact.username}</span>
+              </p>
+              <p className={cn(
+                "text-sm md:text-base transition-all duration-300",
+                callStatus === 'ringing' ? "text-primary" : "text-muted-foreground",
+                callStatus === 'ringing' && "animate-pulse"
+              )}>
+                {callStatus === 'ringing' ? 'Calling...' : (
+                  callStatus === 'connected' ? 'Connected' : 'Ending call...'
+                )}
+              </p>
+            </div>
+          </div>
+
+          {/* Call Controls */}
+          <div className="absolute bottom-0 left-0 right-0 pb-8 md:pb-12 safe-area-bottom bg-gradient-to-t from-background/80 to-transparent">
+            <div className="flex items-center justify-center gap-4 md:gap-6 px-4">
+              {/* Mic Button - Always visible */}
+              <Button
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  "h-14 w-14 md:h-16 md:w-16 rounded-full transition-all duration-300",
+                  "bg-muted/20 hover:bg-muted/30",
+                  "transform hover:scale-110 active:scale-95",
+                  isMuted && "bg-destructive/20 hover:bg-destructive/30"
+                )}
+                onClick={() => setIsMuted(!isMuted)}
+              >
+                {isMuted ? (
+                  <MicOff className="h-6 w-6 md:h-7 md:w-7 text-destructive" />
+                ) : (
+                  <Mic className="h-6 w-6 md:h-7 md:w-7 text-foreground" />
+                )}
+              </Button>
+              
+              {/* End Call Button - Always visible */}
+              <Button
+                size="icon"
+                variant="destructive"
+                className={cn(
+                  "h-16 w-16 md:h-20 md:w-20 rounded-full",
+                  "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700",
+                  "shadow-lg hover:shadow-xl",
+                  "transform hover:scale-110 active:scale-95 transition-all duration-300"
+                )}
+                onClick={handleEndCall}
+              >
+                <Phone className="h-7 w-7 md:h-8 md:w-8 rotate-[135deg]" />
+              </Button>
+
+              {/* Video Button - Always visible */}
+              <Button
+                size="icon"
+                variant="ghost"
+                className={cn(
+                  "h-14 w-14 md:h-16 md:w-16 rounded-full transition-all duration-300",
+                  "bg-muted/20 hover:bg-muted/30",
+                  "transform hover:scale-110 active:scale-95",
+                  !isVideoEnabled && "bg-muted/30"
+                )}
+                onClick={() => setIsVideoEnabled(!isVideoEnabled)}
+              >
+                {isVideoEnabled ? (
+                  <Video className="h-6 w-6 md:h-7 md:w-7 text-foreground" />
+                ) : (
+                  <VideoOff className="h-6 w-6 md:h-7 md:w-7 text-muted-foreground" />
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};

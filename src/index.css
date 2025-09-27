@@ -1,0 +1,282 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Modern Chat App Design System - Red & White Theme
+All colors MUST be HSL for consistent theming.
+*/
+
+@layer base {
+  :root {
+    /* Core Theme - Red & White */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 12%;
+
+    /* Primary Red Theme */
+    --primary: 0 84% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 0 84% 48%;
+    --primary-light: 0 84% 95%;
+
+    /* Secondary Grays */
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 12%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 0 84% 95%;
+    --accent-foreground: 0 84% 55%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 96%;
+    --ring: 0 84% 55%;
+
+    /* Chat-specific colors */
+    --chat-bg: 0 0% 98%;
+    --message-sent: 0 84% 55%;
+    --message-sent-foreground: 0 0% 100%;
+    --message-received: 0 0% 100%;
+    --message-received-foreground: 0 0% 12%;
+    --sidebar-bg: 0 0% 100%;
+    --online-status: 120 84% 45%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(0 84% 55%), hsl(0 84% 48%));
+    --gradient-chat: linear-gradient(180deg, hsl(0 0% 100%), hsl(0 0% 98%));
+    --gradient-bg: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(0 84% 98%) 100%);
+    
+    /* Shadows */
+    --shadow-soft: 0 2px 8px hsl(0 0% 0% / 0.08);
+    --shadow-medium: 0 4px 12px hsl(0 0% 0% / 0.12);
+    --shadow-strong: 0 8px 24px hsl(0 0% 0% / 0.16);
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark mode with red accents */
+    --background: 0 0% 8%;
+    --foreground: 0 0% 95%;
+
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 0 84% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 0 84% 48%;
+    --primary-light: 0 84% 15%;
+
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 0 84% 15%;
+    --accent-foreground: 0 84% 55%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 3.7% 15%;
+    --input: 0 0% 18%;
+    --ring: 0 84% 55%;
+
+    --chat-bg: 0 0% 10%;
+    --message-sent: 0 84% 55%;
+    --message-sent-foreground: 0 0% 100%;
+    --message-received: 0 0% 18%;
+    --message-received-foreground: 0 0% 95%;
+    --sidebar-bg: 0 0% 12%;
+    --online-status: 120 84% 45%;
+    
+    --gradient-primary: linear-gradient(135deg, hsl(0 84% 55%), hsl(0 84% 48%));
+    --gradient-chat: linear-gradient(180deg, hsl(0 0% 12%), hsl(0 0% 10%));
+    
+    --shadow-soft: 0 2px 8px hsl(0 0% 0% / 0.3);
+    --shadow-medium: 0 4px 12px hsl(0 0% 0% / 0.4);
+    --shadow-strong: 0 8px 24px hsl(0 0% 0% / 0.5);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    /* Prevent zoom on mobile */
+    touch-action: manipulation;
+  }
+
+  /* Mobile touch improvements */
+  button, input, textarea, select {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Prevent text selection on mobile */
+  .no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  /* Mobile safe area */
+  @supports (padding: max(0px)) {
+    .safe-area-top {
+      padding-top: max(env(safe-area-inset-top), 16px);
+    }
+    
+    .safe-area-bottom {
+      padding-bottom: max(env(safe-area-inset-bottom), 16px);
+    }
+  }
+
+  /* Mobile scrolling optimization */
+  .mobile-scroll {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--muted-foreground) var(--muted);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: hsl(var(--muted));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted-foreground) / 0.2);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground) / 0.3);
+  }
+}
+
+@layer components {
+  /* Pulse Ring Animation */
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.3);
+    }
+    
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 15px rgba(220, 38, 38, 0);
+    }
+    
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+    }
+  }
+
+  .animate-pulse-ring {
+    animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Call Avatar Glow Animation */
+  @keyframes avatarGlow {
+    0%, 100% {
+      box-shadow: 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+    }
+  }
+
+  .animate-avatar-glow {
+    animation: avatarGlow 2s ease-in-out infinite;
+  }
+
+  /* Call Ringing Animation */
+  @keyframes softBounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-soft-bounce {
+    animation: softBounce 2s ease-in-out infinite;
+  }
+
+  /* Chat Message Animation */
+  .message-slide-in {
+    animation: messageSlideIn 0.3s ease-out;
+  }
+
+  @keyframes messageSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Online Status Pulse */
+  .online-pulse {
+    animation: onlinePulse 2s infinite;
+  }
+
+  @keyframes onlinePulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  /* Hover Animations */
+  .hover-lift {
+    transition: all 0.2s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-medium);
+  }
+}
