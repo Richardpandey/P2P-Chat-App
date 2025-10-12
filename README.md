@@ -1,6 +1,6 @@
 # P2P-Chat-App
 
-I believe AI is not replacing developers, but empowering them. This project shows how ideas can be turned into working apps faster with the help of AI, while still requiring technical understanding, programming language and design decisions. Through this project, I not only built a working chat app but also learned how real time communication works under the hood. I explored how WebRTC establishes peer to peer connections, how WebSockets handle signaling, and why this architecture ensures strong privacy. This gave me a practical understanding of networking, security beyond just coding the app itself.
+I believe AI is not replacing developers, but empowering them. This project shows how ideas can be turned into working apps faster with the help of AI, while still requiring technical understanding, programming language and design decisions. Through this project, I not only built a working chat app but also learned how real time communication works under the hood. I explored how WebRTC establishes peer to peer connections, how WebSockets handle signaling, and why this architecture ensures strong privacy. This gave me a practical understanding of networking, security beyond just coding the app itself
 
 
 https://github.com/user-attachments/assets/5913e668-8f35-43cd-b2de-96a9bf6395c4
